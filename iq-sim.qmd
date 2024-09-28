@@ -9,15 +9,9 @@ library(tidyverse)
 ```
 
 ```{r}
-create_iq_data <- function(n, rxx) {
-  true_iq <- rnorm(n, 100, 15)
-  test1_errors <- rnorm(n, 0, sqrt((1-rxx)/rxx)*15)
-  test1_scores <- true_iq + test1_errors
-  
-  tibble(true_iq, test1_scores, test1_errors)
-}
+source("R/functions.R")
 
-iq_data <- create_iq_data(1e5, .9)
+iq_data <- simulate_data_with_reliability(n = 1e5, r = .9, m = 100, sd = 15)
 
 classify_percentile <- function(results, percentile) {
   limit <- quantile(results, percentile)
