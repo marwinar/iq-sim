@@ -1,0 +1,30 @@
+---
+title: "Iq-simulatie2"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+create_iq_data <- function(n, rxx) {
+  true_iq <- rnorm(n, 100, 15)
+  test1_errors <- rnorm(n, 0, sqrt((1-rxx)/rxx)*15)
+  test1_scores <- true_iq + test1_errors
+  
+  tibble(true_iq, test1_scores, test1_errors)
+}
+
+iq_data <- create_iq_data(1e5, .9)
+
+classify_percentile <- function(results, percentile) {
+  limit <- quantile(results, percentile)
+  factor(if_else(results >= limit, "gifted", "normal"), levels = c("normal", "gifted"))
+}
+
+iq_data %>% 
+  mutate(teacher_result = classify_percentile(true_iq, .84))
+
+```
